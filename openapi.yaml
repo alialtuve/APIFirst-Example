@@ -1,0 +1,433 @@
+openapi: 3.1.1
+info:
+  title: API First  
+  version: 1.2.3
+  description: API First is a tool for designing and documenting APIs using the OpenAPI Specification.
+  termsOfService: http://example.com/terms/
+  contact:
+    name: API Support
+    url: http://www.example.com/support
+    email:  contact@example.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+externalDocs:
+  description: Find more info here
+  url: http://example.com
+tags:
+  - name: Users
+    description: Operations about users
+  - name: Products
+    description: Operations about products
+    externalDocs:
+      description: Find more info about products here
+      url: http://example.com/products
+servers:
+  - url: http://localhost:3000
+    description: First version of the API
+  - url: https://api.example.com/v2
+    description: Second version of the API
+components:
+  schemas:
+    Product:
+      type: object
+      required:
+        - name
+        - price
+        - category
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          minLength: 4
+          maxLength: 50
+          example: "Smartphone"
+        price:
+          type: number
+          minimum: 0
+          multipleOf: 0.01
+        category:
+          type: string
+          enum: [electronics, clothing, food, books]
+        tags:
+          type: array
+          items:
+            type: string
+            minItems: 1
+        inStock:
+          type: boolean
+        specifications:
+          type: object
+          additionalProperties:
+            type: string
+        ratings:
+          type: array
+          items:
+            type: object
+            required:
+              - score
+              - comment
+            properties:
+              score:
+                type: integer
+                minimum: 1
+                maximum: 5
+              comment:
+                type: string  
+                maxLength: 200            
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JSON Web Token authentication
+security:
+  - JWT: []
+paths:
+  /users:
+    post:
+      tags:
+        - Users
+      summary: Create a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - age
+                - email
+              properties:
+                name:
+                  type: string
+                  minLength: 2
+                age:
+                  type: integer
+                  minimum: 18
+                email:
+                  type: string
+                  format: email
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  age:
+                    type: integer
+                  email:
+                    type: string
+  /users/{id}:
+    get:
+      tags:
+        - Users
+      summary: Get user by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: User retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  age:
+                    type: integer
+                  email:
+                    type: string
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+    put:
+      tags:
+        - Users
+      summary: Update user by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - age
+                - email
+              properties:
+                name:
+                  type: string
+                  minLength: 2
+                age:
+                  type: integer
+                  minimum: 18
+                email:
+                  type: string
+                  format: email
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  age:
+                    type: integer
+                  email:
+                    type: string
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /products:
+    post:
+      summary: Create a new product
+      tags:
+        - Products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - price
+                - category
+              properties:
+                name:
+                  type: string
+                  minLength: 4
+                  maxLength: 50
+                price:
+                  type: number
+                  minimum: 0
+                  multipleOf: 0.01
+                category:
+                  type: string
+                  enum: [electronics, clothing, food, books]
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  minItems: 1
+                inStock:
+                  type: boolean
+                specifications:
+                  type: object
+                  additionalProperties:
+                    type: string
+                ratings:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - score
+                      - comment
+                    properties:
+                      score:
+                        type: integer
+                        minimum: 1
+                        maximum: 5
+                      comment:
+                        type: string
+                        maxLength: 200
+      responses:
+        '201':
+          description: Product created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+    get:
+      tags:
+        - Products
+      summary: Get all products
+      responses:
+        '200':
+          description: Products retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+  /products/{id}:
+    get:
+      tags:
+        - Products
+      summary: Get product by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Product retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+    put:
+      tags:
+        - Products
+      summary: Update product by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - price
+                - category
+              properties:
+                name:
+                  type: string
+                  minLength: 4
+                  maxLength: 50
+                price:
+                  type: number
+                  minimum: 0
+                  multipleOf: 0.01
+                category:
+                  type: string
+                  enum: [electronics, clothing, food, books]
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  minItems: 1
+                inStock:
+                  type: boolean
+                specifications:
+                  type: object
+                  additionalProperties:
+                    type: string
+                ratings:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - score
+                      - comment
+                    properties:
+                      score:
+                        type: integer
+                        minimum: 1
+                        maximum: 5
+                      comment:
+                        type: string
+                        maxLength: 200
+      responses:
+        '200':
+          description: Product updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+    delete:
+      tags:
+        - Products
+      summary: Delete product by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Product deleted successfully
+        '404':
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string

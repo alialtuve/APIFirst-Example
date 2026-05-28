@@ -1,0 +1,45 @@
+OpenAPI(Antes Swagger)
+📌 Definición
+
+Especificación estándar para documentar APIs RESTful de forma clara y legible por humanos y máquinas, usando 
+archivos YML. Permite comprender, desarrollar, consumir y mantener APIs de manera más eficiente.
+
+🎯 Propósito
+
+Hacer que las funcionalidades de una API sean fáciles de interpretar y utilizar. Incluye en el proyecto un archivo
+YML que permite:
+
+📚 Documentación automática y actualizada
+⚙️ Generación automática de código
+✅ Validación de solicitudes y respuestas
+🤝 Mejor colaboración entre equipos
+🚀 Mayor adopción de APIs
+🗂 Estructura de un archivo OpenAPI (YML)
+
+1️⃣ Versión e información general
+
+Versión de OpenAPI (ej. 3.1.1)
+Título descriptivo
+Descripción funcional
+Datos de contacto
+2️⃣ Servidores
+
+Producción
+Pruebas (staging)
+3️⃣ Definición de rutas (paths)
+
+Métodos (GET, POST, etc.) Parámetros, descripciones y requisitos
+Respuestas HTTP con esquemas y tipos de datos
+4️⃣ Componentes reutilizables
+
+Esquemas compartidos (ej. usuario: ID, nombre, email)
+Configuración de seguridad
+⭐ Ventajas clave
+
+Documentación clara para todos los equipos
+Código generado automáticamente
+Colaboración más eficiente
+Validaciones simplificadas
+Mayor adopción gracias a documentación coherente
+💡 Tip rápido: un buen archivo OpenAPI no solo describe la API, sino que también sirve como base para 
+generar clientes, pruebas y documentación interactiva.
